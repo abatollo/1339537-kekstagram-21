@@ -1,7 +1,7 @@
 # Личный проект «Кекстаграм» [![Build status][travis-image]][travis-url]
 
 * Студент: [Галина Попова](https://up.htmlacademy.ru/javascript/21/user/1339537).
-* Наставник: `Неизвестно`.
+* Наставник: [Даниил Царёв](https://up.htmlacademy.ru/javascript/21/user/945835).
 
 ---
 
