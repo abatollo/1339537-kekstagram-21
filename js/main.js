@@ -1,10 +1,5 @@
 "use strict";
 
-const photosContainer = document.querySelector(`.pictures`);
-const photosTemplate = document.querySelector(`#picture`)
-	.content
-  .querySelector(`.picture`);
-
 const PHOTOS_AMOUNT = 25;
 
 const COMMENT_MESSAGES = [
@@ -25,6 +20,11 @@ const COMMENT_NAMES = [
   `Оля`
 ];
 
+const photosContainer = document.querySelector(`.pictures`);
+const photosTemplate = document.querySelector(`#picture`)
+	.content
+  .querySelector(`.picture`);
+
 const getRandom = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
 const getRandomFrom = (arr) => arr[getRandom(0, arr.length - 1)];
@@ -33,7 +33,7 @@ const generateComments = (amount) => {
   const comments = [];
   for (let i = 0; i < amount; i++) {
     comments.push({
-      avatar: `img/avatar - ${getRandom(1, 6)}.svg`,
+      avatar: `img/avatar-${getRandom(1, 6)}.svg`,
       message: getRandomFrom(COMMENT_MESSAGES),
       name: getRandomFrom(COMMENT_NAMES)
     });
@@ -77,3 +77,34 @@ const mockPhotos = generatePhotos(PHOTOS_AMOUNT);
 
 photosContainer.appendChild(renderAllPhotos(mockPhotos));
 
+// -=-=-=-=-=-=-=-=-=
+
+const bigPictures = document.querySelector(`.big-picture`);
+bigPictures.classList.remove(`hidden`);
+
+bigPictures.querySelector(`.big-picture__img img`).setAttribute(`src`, `${mockPhotos[0].url}`);
+bigPictures.querySelector(`.likes-count`).textContent = mockPhotos[0].likes;
+bigPictures.querySelector(`.comments-count`).textContent = mockPhotos[0].comments.length;
+bigPictures.querySelector(`.social__comments`).innerHTML = ``;
+for (let i = 0; i < mockPhotos[0].comments.length; i++) {
+  bigPictures.querySelector(`.social__comments`).innerHTML +=
+  `<li class="social__comment">
+    <img
+        class="social__picture"
+        src="${mockPhotos[0].comments[i].avatar}"
+        alt="${mockPhotos[0].comments[i].name}"
+        width="35" height="35">
+    <p class="social__text">${mockPhotos[0].comments[i].message}</p>
+  </li>`;
+}
+
+bigPictures.querySelector(`.social__caption`).textContent = mockPhotos[0].description;
+
+const socialCommentCount = document.querySelector(`.social__comment-count`);
+socialCommentCount.classList.add(`hidden`);
+
+const commentsLoader = document.querySelector(`.comments-loader`);
+commentsLoader.classList.add(`hidden`);
+
+const body = document.querySelector(`body`);
+body.classList.add(`modal-open`);
