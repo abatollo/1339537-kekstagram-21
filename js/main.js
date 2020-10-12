@@ -77,34 +77,50 @@ const mockPhotos = generatePhotos(PHOTOS_AMOUNT);
 
 photosContainer.appendChild(renderAllPhotos(mockPhotos));
 
-// -=-=-=-=-=-=-=-=-=
+// -=-=-=-=-=-=-=-=-=-
 
-const bigPictures = document.querySelector(`.big-picture`);
-bigPictures.classList.remove(`hidden`);
+const renderBigPicture = (photo) => {
+  const renderBigPicture = document.querySelector(`.big-picture`);
+  renderBigPicture.classList.remove(`hidden`);
 
-bigPictures.querySelector(`.big-picture__img img`).setAttribute(`src`, `${mockPhotos[0].url}`);
-bigPictures.querySelector(`.likes-count`).textContent = mockPhotos[0].likes;
-bigPictures.querySelector(`.comments-count`).textContent = mockPhotos[0].comments.length;
-bigPictures.querySelector(`.social__comments`).innerHTML = ``;
-for (let i = 0; i < mockPhotos[0].comments.length; i++) {
-  bigPictures.querySelector(`.social__comments`).innerHTML +=
-  `<li class="social__comment">
-    <img
-        class="social__picture"
-        src="${mockPhotos[0].comments[i].avatar}"
-        alt="${mockPhotos[0].comments[i].name}"
-        width="35" height="35">
-    <p class="social__text">${mockPhotos[0].comments[i].message}</p>
-  </li>`;
-}
+  renderBigPicture.querySelector(`.big-picture__img img`).setAttribute(`src`, `${photo.url}`);
+  renderBigPicture.querySelector(`.likes-count`).textContent = photo.likes;
+  renderBigPicture.querySelector(`.comments-count`).textContent = photo.comments.length;
+  renderBigPicture.querySelector(`.social__comments`).innerHTML = ``;
+  renderBigPictureComments(photo.comments, renderBigPicture.querySelector(`.social__comments`));
+  renderBigPicture.querySelector(`.social__caption`).textContent = photo.description;
 
-bigPictures.querySelector(`.social__caption`).textContent = mockPhotos[0].description;
+  const socialCommentCount = document.querySelector(`.social__comment-count`);
+  socialCommentCount.classList.add(`hidden`);
 
-const socialCommentCount = document.querySelector(`.social__comment-count`);
-socialCommentCount.classList.add(`hidden`);
+  const commentsLoader = document.querySelector(`.comments-loader`);
+  commentsLoader.classList.add(`hidden`);
 
-const commentsLoader = document.querySelector(`.comments-loader`);
-commentsLoader.classList.add(`hidden`);
+  const body = document.querySelector(`body`);
+  body.classList.add(`modal-open`);
+};
 
-const body = document.querySelector(`body`);
-body.classList.add(`modal-open`);
+const renderBigPictureComments = (comments, mountingPoint) => {
+  for (let i = 0; i < comments.length; i++) {
+    const commentListItem = document.createElement(`li`);
+    commentListItem.classList.add(`social__comment`);
+
+    const commentImage = document.createElement(`img`);
+    commentImage.setAttribute(`src`, `${comments[i].avatar}`);
+    commentImage.setAttribute(`alt`, `${comments[i].name}`);
+    commentImage.setAttribute(`width`, `35`);
+    commentImage.setAttribute(`height`, `35`);
+    commentImage.classList.add(`social__picture`);
+
+    const commentText = document.createElement(`p`);
+    commentText.classList.add(`social__text`);
+    commentText.textContent = comments[i].message;
+
+    commentListItem.appendChild(commentImage);
+    commentListItem.appendChild(commentText);
+
+    mountingPoint.appendChild(commentListItem);
+  }
+};
+
+renderBigPicture(mockPhotos[5]);
