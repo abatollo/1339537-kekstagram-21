@@ -20,6 +20,8 @@ const COMMENT_NAMES = [
   `Оля`
 ];
 
+const HASTAG_MAX_LENGTH = 20;
+
 const photosContainer = document.querySelector(`.pictures`);
 const photosTemplate = document.querySelector(`#picture`)
 	.content
@@ -125,3 +127,107 @@ const renderBigPictureComments = (comments, mountingPoint) => {
 };
 
 renderBigPicture(mockPhotos[5]);
+
+// -=-=-=-=-=-=-=-=-=-
+
+const uploadOpener = document.querySelector(`#upload-file`);
+const uploadModal = document.querySelector(`.img-upload__overlay`);
+const uploadCanceler = uploadModal.querySelector(`#upload-cancel`);
+
+const effectLevelValue = uploadModal.querySelector(`.effect-level__value`);
+const effectLevelLine = uploadModal.querySelector(`.effect-level__line`);
+const effectLevelPin = effectLevelLine.querySelector(`.effect-level__pin`);
+
+const onUploadOpenerChange = () => {
+  openUploadModal();
+};
+
+const onUploadCancelerClick = () => {
+  closeUploadModal();
+};
+
+const onDocumentEscapePress = (evt) => {
+  if (evt.key === `Escape` && evt.target !== textHashtags) {
+    evt.preventDefault();
+    closeUploadModal();
+  }
+};
+
+const openUploadModal = () => {
+  uploadCanceler.addEventListener(`click`, onUploadCancelerClick);
+  document.addEventListener(`keydown`, onDocumentEscapePress);
+  effectLevelPin.addEventListener(`mouseup`, onEffectLevelPinMouseUp);
+  uploadOpener.removeEventListener(`change`, onUploadOpenerChange);
+  textHashtags.addEventListener(`input`, onTextHashtagsInput);
+  uploadModal.classList.remove(`hidden`);
+};
+
+const closeUploadModal = () => {
+  uploadCanceler.removeEventListener(`click`, onUploadCancelerClick);
+  document.removeEventListener(`keydown`, onDocumentEscapePress);
+  effectLevelPin.removeEventListener(`mouseup`, onEffectLevelPinMouseUp);
+  uploadOpener.addEventListener(`change`, onUploadOpenerChange);
+  textHashtags.removeEventListener(`input`, onTextHashtagsInput);
+  uploadModal.classList.add(`hidden`);
+  uploadOpener.value = ``;
+};
+
+const onEffectLevelPinMouseUp = () => {
+  effectLevelValue.value = effectLevelPin.offsetLeft / effectLevelLine.offsetWidth * 100;
+};
+
+uploadOpener.addEventListener(`change`, onUploadOpenerChange);
+
+// -=-=-=-=-=-=-=-=-=-
+
+const textHashtags = uploadModal.querySelector(`.text__hashtags`);
+
+const re = /^[\w]*$/;
+
+const validateTextHashtags = () => {
+  const textHashtagsParsed = textHashtags.value.trim().split(` `);
+  let customValidityMessage = ``;
+  let isSameHashtagFound = false;
+
+  for (let i = 0; i < textHashtagsParsed.length; i++) {
+    if (textHashtagsParsed[i].startsWith(`#`) && textHashtagsParsed[i].length === 1) {
+      customValidityMessage += `Хеш-тег не может состоять из одного октоторпа. `;
+    }
+
+    if (!textHashtagsParsed[i].startsWith(`#`) && re.test(textHashtagsParsed[i]) && textHashtagsParsed[i].length > 0) {
+      customValidityMessage += `Хеш-тег “${textHashtagsParsed[i]}” должен предваряться октоторпом. `;
+    }
+
+    if (textHashtagsParsed[i].length > HASTAG_MAX_LENGTH) {
+      customValidityMessage += `Хеш-тег “${textHashtagsParsed[i]}” должен быть короче 20 символов. Удалите лишние ${textHashtagsParsed[i].length - HASTAG_MAX_LENGTH} симв. `;
+    }
+
+    if (!textHashtagsParsed[i].startsWith(`#`) && !re.test(textHashtagsParsed[i])) {
+      customValidityMessage += `Нельзя использовать спецсимволы (#, @, $ и т. п.), за исключением октоторпа в начале хеш-тега, символы пунктуации (тире, дефис, запятая и т. п.), эмодзи и т. д. `;
+    }
+
+    if (textHashtagsParsed[i].startsWith(`#`) && textHashtagsParsed[i].length > 1 && !re.test(textHashtagsParsed[i].substring(1))) {
+      customValidityMessage += `После октоторпа не должны стоять спецсимволы (#, @, $ и т. п.), символы пунктуации (тире, дефис, запятая и т. п.), эмодзи и т. д. `;
+    }
+
+    if (!isSameHashtagFound) {
+      for (let j = 0; j < textHashtagsParsed.length; j++) {
+        if (textHashtagsParsed[i] === textHashtagsParsed[j] && textHashtagsParsed[i].length > 0 && j !== i) {
+          customValidityMessage += `Хеш-теги не должны повторяться. `;
+          isSameHashtagFound = true;
+        }
+      }
+    }
+  }
+
+  if (textHashtagsParsed.length > 5) {
+    customValidityMessage += `Нельзя указывать больше пяти хеш-тегов. `;
+  }
+
+  textHashtags.setCustomValidity(customValidityMessage);
+  textHashtags.reportValidity();
+};
+
+const onTextHashtagsInput = () => {
+  validateTextHashtags();
+};
