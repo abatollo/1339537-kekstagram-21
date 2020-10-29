@@ -56,13 +56,17 @@ const generatePhotos = (amount) => {
   return photos;
 };
 
-const renderPhoto = (photo) => {
+const renderPhoto = (photo, id) => {
   const photosElement = photosTemplate.cloneNode(true);
+
+  photosElement.dataset.id = id;
 
   photosElement.querySelector(`.picture__comments`).textContent = photo.comments.length;
   photosElement.querySelector(`.picture__likes`).textContent = photo.likes;
   photosElement.querySelector(`.picture__img`).setAttribute(`src`, `${photo.url}`);
   photosElement.querySelector(`.picture__img`).setAttribute(`alt`, `${photo.description}`);
+
+  // photosElement.querySelector(`.picture__img`).dataset.id = id;
 
   return photosElement;
 };
@@ -70,7 +74,7 @@ const renderPhoto = (photo) => {
 const renderAllPhotos = (photos) => {
   const photosFragment = document.createDocumentFragment();
   for (let i = 0; i < photos.length; i++) {
-    photosFragment.appendChild(renderPhoto(photos[i]));
+    photosFragment.appendChild(renderPhoto(photos[i], i));
   }
   return photosFragment;
 };
@@ -126,8 +130,6 @@ const renderBigPictureComments = (comments, mountingPoint) => {
   }
 };
 
-renderBigPicture(mockPhotos[5]);
-
 // -=-=-=-=-=-=-=-=-=-
 
 const uploadOpener = document.querySelector(`#upload-file`);
@@ -147,7 +149,7 @@ const onUploadCancelerClick = () => {
 };
 
 const onDocumentEscapePress = (evt) => {
-  if (evt.key === `Escape` && evt.target !== textHashtags) {
+  if (evt.key === `Escape` && evt.target !== textHashtags && evt.target !== textDescription) {
     evt.preventDefault();
     closeUploadModal();
   }
@@ -231,3 +233,50 @@ const validateTextHashtags = () => {
 const onTextHashtagsInput = () => {
   validateTextHashtags();
 };
+
+const textDescription = uploadModal.querySelector(`.text__description`);
+
+// -=-=-=-=-=-=-=-=-=-
+
+const hideBigPicture = () => {
+  document.querySelector(`.big-picture`).classList.add(`hidden`);
+};
+
+const bigPictureCancel = document.querySelector(`.big-picture__cancel`);
+
+const onBigPictureCancelClick = () => {
+  hideBigPicture();
+
+  photosContainer.addEventListener(`click`, onPhotosContainerClick);
+  bigPictureCancel.removeEventListener(`click`, onBigPictureCancelClick);
+  document.removeEventListener(`keydown`, onBigPictureEscapePress);
+};
+
+const onBigPictureEscapePress = (evt) => {
+  if (evt.key === `Escape`) {
+    evt.preventDefault();
+    hideBigPicture();
+
+    photosContainer.addEventListener(`click`, onPhotosContainerClick);
+    bigPictureCancel.removeEventListener(`click`, onBigPictureCancelClick);
+    document.removeEventListener(`keydown`, onBigPictureEscapePress);
+  }
+};
+
+const openBigPicture = (id) => {
+  renderBigPicture(mockPhotos[id]);
+
+  photosContainer.removeEventListener(`click`, onPhotosContainerClick);
+  bigPictureCancel.addEventListener(`click`, onBigPictureCancelClick);
+  document.addEventListener(`keydown`, onBigPictureEscapePress);
+};
+
+const onPhotosContainerClick = (evt) => {
+  if (evt.target.matches(`.picture__img`)) {
+    openBigPicture(evt.target.parentElement.dataset.id);
+  } else if (evt.target.matches(`.pictures a`)) {
+    openBigPicture(evt.target.dataset.id);
+  }
+};
+
+photosContainer.addEventListener(`click`, onPhotosContainerClick);
