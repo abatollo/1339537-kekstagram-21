@@ -1,12 +1,15 @@
 'use strict';
 
 (() => {
-  var ESC_KEYCODE = 27;
-  var ENTER_KEYCODE = 13;
+  const ESC_KEYCODE = 27;
 
-  window.isEscEvent = function (evt, action) {
+  const isEscEvent = function (evt, action) {
     if (evt.keyCode === ESC_KEYCODE) {
       action();
     }
+  };
+
+  window.util = {
+    isEscEvent
   };
 })();

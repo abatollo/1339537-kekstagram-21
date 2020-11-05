@@ -55,7 +55,7 @@
     validateTextHashtags();
   };
 
-  const textDescription = uploadModal.uploadModal.querySelector(`.text__description`);
+  const textDescription = window.uploadModal.uploadModal.querySelector(`.text__description`);
 
   window.form = {
     textHashtags,
