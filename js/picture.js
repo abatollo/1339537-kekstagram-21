@@ -90,6 +90,7 @@
   window.gallery.photosContainer.addEventListener(`click`, onPhotosContainerClick);
 
   window.picture = {
-    renderBigPicture
+    renderBigPicture,
+    onPhotosContainerClick
   };
 })();
