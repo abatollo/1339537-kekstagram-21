@@ -72,7 +72,6 @@
   };
 
   const openBigPicture = (id) => {
-    console.log(window.gallery.galleryData);
     window.picture.renderBigPicture(window.gallery.galleryData[id]);
 
     window.gallery.photosContainer.removeEventListener(`click`, onPhotosContainerClick);
