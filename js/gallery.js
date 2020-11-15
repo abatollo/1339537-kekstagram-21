@@ -6,6 +6,7 @@
     .content
     .querySelector(`.picture`);
   const errorModal = document.querySelector(`#error`).content.querySelector(`section`);
+  let galleryData = ``;
 
   const renderPhoto = (photo, id) => {
     const photosElement = photosTemplate.cloneNode(true);
@@ -30,10 +31,9 @@
     return photosFragment;
   };
 
-  // photosContainer.appendChild(renderAllPhotos(window.data));
-
   const onDownloadSuccess = (data) => {
     photosContainer.appendChild(renderAllPhotos(data));
+    window.gallery.galleryData = data;
   };
 
   const onDownloadError = (error) => {
@@ -49,6 +49,7 @@
   window.download(onDownloadSuccess, onDownloadError);
 
   window.gallery = {
-    photosContainer
+    photosContainer,
+    galleryData
   };
 })();
