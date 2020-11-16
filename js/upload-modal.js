@@ -8,9 +8,13 @@
   let currentEffect = ``;
   let effectLevel = DEFAULT_EFFECT_LEVEL;
 
+  const main = document.querySelector(`main`);
+
   const uploadOpener = document.querySelector(`#upload-file`);
   const uploadModal = document.querySelector(`.img-upload__overlay`);
   const uploadCanceler = uploadModal.querySelector(`#upload-cancel`);
+
+  const uploadForm = document.querySelector(`.img-upload__form`);
 
   const imagePreviewElement = uploadModal.querySelector(`.img-upload__preview img`);
 
@@ -53,6 +57,7 @@
     uploadModal.classList.remove(`hidden`);
     effectsListElement.addEventListener(`change`, effectsListClickHandler);
     scaleControl.addEventListener(`click`, scaleControlHandler);
+    uploadForm.addEventListener(`submit`, onUploadFormSubmit);
   };
 
   const closeUploadModal = () => {
@@ -66,6 +71,62 @@
     uploadOpener.value = ``;
     effectsListElement.removeEventListener(`change`, effectsListClickHandler);
     scaleControl.removeEventListener(`click`, scaleControlHandler);
+    uploadForm.removeEventListener(`submit`, onUploadFormSubmit);
+
+    scaleControlValue.value = DEFAULT_SCALE_CONTROL_VALUE;
+    imagePreviewElement.style.transform = ``;
+    currentEffect = ``;
+    setEffectLevel(DEFAULT_EFFECT_LEVEL);
+  };
+
+  const onUploadFormSubmit = (evt) => {
+    evt.preventDefault();
+    window.api.upload(new FormData(uploadForm), onUploadSuccess, onUploadError);
+    uploadForm.reset();
+    closeUploadModal();
+  };
+
+  const onUploadSuccess = () => {
+    const successModal = document.querySelector(`#success`).content.querySelector(`section`);
+    const successWindow = successModal.cloneNode(true);
+    const successButton = successWindow.querySelector(`.success__button`);
+    successButton.addEventListener(`click`, () => {
+      successWindow.remove();
+    });
+    document.addEventListener(`keydown`, (keydownEvent) => {
+      window.util.isEscEvent(keydownEvent, () => {
+        successWindow.remove();
+      });
+    });
+    successWindow.addEventListener(`click`, (evt) => {
+      if (!evt.target.closest(`.success__inner`)) {
+        successWindow.remove();
+      }
+    });
+
+    successButton.addEventListener(`blur`, () => successButton.focus());
+    main.append(successWindow);
+  };
+
+  const onUploadError = () => {
+    const errorModal = document.querySelector(`#error`).content.querySelector(`section`);
+    const errorWindow = errorModal.cloneNode(true);
+    const errorButton = errorWindow.querySelector(`.error__button`);
+    errorButton.addEventListener(`click`, () => {
+      errorWindow.remove();
+    });
+    document.addEventListener(`keydown`, (keydownEvent) => {
+      window.util.isEscEvent(keydownEvent, () => {
+        errorWindow.remove();
+      });
+    });
+    errorWindow.addEventListener(`click`, (evt) => {
+      if (!evt.target.closest(`.error__inner`)) {
+        errorWindow.remove();
+      }
+    });
+    errorButton.addEventListener(`blur`, () => errorButton.focus());
+    main.append(errorWindow);
   };
 
   const scaleControlHandler = (evt) => {
@@ -123,12 +184,10 @@
       imagePreviewElement.classList.add(currentEffect);
       effectLevel = DEFAULT_EFFECT_LEVEL;
       setEffectLevel(effectLevel);
-      // effectLevelSliderElement.classList.remove(`hidden`);
       return;
     }
 
     currentEffect = ``;
-    // effectLevelSliderElement.classList.add(`hidden`);
   };
 
   setEffectLevel(DEFAULT_EFFECT_LEVEL);
