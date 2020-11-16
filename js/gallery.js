@@ -44,7 +44,7 @@
     photosContainer.append(errorWindow);
   };
 
-  window.download(onDownloadSuccess, onDownloadError);
+  window.api.download(onDownloadSuccess, onDownloadError);
 
   window.gallery = {
     photosContainer,
