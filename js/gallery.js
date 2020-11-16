@@ -6,7 +6,7 @@
     .content
     .querySelector(`.picture`);
   const errorModal = document.querySelector(`#error`).content.querySelector(`section`);
-  let galleryData = ``;
+  let galleryData = [];
 
   const renderPhoto = (photo, id) => {
     const photosElement = photosTemplate.cloneNode(true);
@@ -17,8 +17,6 @@
     photosElement.querySelector(`.picture__likes`).textContent = photo.likes;
     photosElement.querySelector(`.picture__img`).setAttribute(`src`, `${photo.url}`);
     photosElement.querySelector(`.picture__img`).setAttribute(`alt`, `${photo.description}`);
-
-    // photosElement.querySelector(`.picture__img`).dataset.id = id;
 
     return photosElement;
   };
@@ -32,8 +30,8 @@
   };
 
   const onDownloadSuccess = (data) => {
-    photosContainer.appendChild(renderAllPhotos(data));
     window.gallery.galleryData = data;
+    photosContainer.appendChild(renderAllPhotos(data));
   };
 
   const onDownloadError = (error) => {
