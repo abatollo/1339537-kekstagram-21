@@ -106,8 +106,13 @@
   };
 
   const openBigPicture = (id) => {
-    window.picture.renderBigPicture(window.gallery.galleryData[id], id);
-
+    let relevantPicture;
+    for (let pic of window.gallery.galleryData) {
+      if (pic.url === id) {
+        relevantPicture = pic;
+      }
+    }
+    window.picture.renderBigPicture(relevantPicture, id);
     window.gallery.photosContainer.removeEventListener(`click`, onPhotosContainerClick);
     bigPictureCancel.addEventListener(`click`, onBigPictureCancelClick);
     document.addEventListener(`keydown`, onBigPictureEscapePress);

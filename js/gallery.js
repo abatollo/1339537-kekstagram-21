@@ -6,6 +6,7 @@
     .content
     .querySelector(`.picture`);
   const errorModal = document.querySelector(`#error`).content.querySelector(`section`);
+  const filter = document.querySelector(`.img-filters`);
   let galleryData = [];
 
   const renderPhoto = (photo, id) => {
@@ -24,7 +25,7 @@
   const renderAllPhotos = (photos) => {
     const photosFragment = document.createDocumentFragment();
     for (let i = 0; i < photos.length; i++) {
-      photosFragment.appendChild(renderPhoto(photos[i], i));
+      photosFragment.appendChild(renderPhoto(photos[i], photos[i].url));
     }
     return photosFragment;
   };
@@ -32,6 +33,7 @@
   const onDownloadSuccess = (data) => {
     window.gallery.galleryData = data;
     photosContainer.appendChild(renderAllPhotos(data));
+    filter.classList.remove(`img-filters--inactive`);
   };
 
   const onDownloadError = (error) => {
@@ -48,6 +50,7 @@
 
   window.gallery = {
     photosContainer,
-    galleryData
+    galleryData,
+    renderAllPhotos
   };
 })();
