@@ -35,7 +35,7 @@
 
       if (!isSameHashtagFound) {
         for (let j = 0; j < textHashtagsParsed.length; j++) {
-          if (textHashtagsParsed[i] === textHashtagsParsed[j] && textHashtagsParsed[i].length > 0 && j !== i) {
+          if (textHashtagsParsed[i].toLowerCase() === textHashtagsParsed[j].toLowerCase() && textHashtagsParsed[i].length > 0 && j !== i) {
             customValidityMessage += `Хеш-теги не должны повторяться. `;
             isSameHashtagFound = true;
           }
