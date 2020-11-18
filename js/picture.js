@@ -8,7 +8,13 @@
   const onCommentsLoaderClick = () => {
     const bigPicture = document.querySelector(`.big-picture`);
     const bigPictureId = bigPicture.dataset.id;
-    const bigPictureComments = window.gallery.galleryData[bigPictureId].comments;
+
+    let bigPictureComments;
+    for (let pictureComments of window.gallery.galleryData) {
+      if (pictureComments.url === bigPictureId) {
+        bigPictureComments = pictureComments.comments;
+      }
+    }
 
     const socialComments = document.querySelector(`.social__comments`);
     const socialCommentCount = document.querySelector(`.social__comment-count`);
