@@ -1,19 +1,24 @@
 'use strict';
 
-const URL_DOWNLOAD = `https://21.javascript.pages.academy/kekstagram/data`;
-const URL_UPLOAD = `https://21.javascript.pages.academy/kekstagram/`;
-const STATUS_CODE = {
-  OK: 200
+const Endpoint = {
+  DOWNLOAD: `https://21.javascript.pages.academy/kekstagram/data`,
+  UPLOAD: `https://21.javascript.pages.academy/kekstagram/1`
+};
+const StatusCode = {
+  OK: 200,
+  NOT_FOUND: 404
 };
 const TIMEOUT = 10000;
 
-const ajax = (method, url, data, onSuccess, onError) => {
+const transferData = (method, url, data, onSuccess, onError) => {
   const xhr = new XMLHttpRequest();
   xhr.responseType = `json`;
 
   xhr.addEventListener(`load`, () => {
-    if (xhr.status === STATUS_CODE.OK) {
+    if (xhr.status === StatusCode.OK) {
       onSuccess(xhr.response);
+    } else if (xhr.status === StatusCode.NOT_FOUND) {
+      onError(`Узел не найден`);
     } else {
       onError(`Статус ответа: ${xhr.status} ${xhr.statusText}`);
     }
@@ -33,11 +38,11 @@ const ajax = (method, url, data, onSuccess, onError) => {
 };
 
 const download = (onSuccess, onError) => {
-  ajax(`GET`, URL_DOWNLOAD, null, onSuccess, onError);
+  transferData(`GET`, Endpoint.DOWNLOAD, null, onSuccess, onError);
 };
 
 const upload = (data, onSuccess, onError) => {
-  ajax(`POST`, URL_UPLOAD, data, onSuccess, onError);
+  transferData(`POST`, Endpoint.UPLOAD, data, onSuccess, onError);
 };
 
 window.api = {

@@ -1,6 +1,8 @@
 'use strict';
 
 (() => {
+  const ERROR_CONTAINER_WIDTH = 500;
+
   const photosContainer = document.querySelector(`.pictures`);
   const photosTemplate = document.querySelector(`#picture`)
     .content
@@ -41,7 +43,7 @@
     const errorContainer = errorWindow.querySelector(`.error__inner`);
     const errorButton = errorWindow.querySelector(`.error__button`);
     errorContainer.removeChild(errorButton);
-    errorContainer.style.width = `${700}px`;
+    errorContainer.style.width = `${ERROR_CONTAINER_WIDTH}px`;
     errorWindow.querySelector(`.error__title`).textContent = error;
     photosContainer.append(errorWindow);
   };

@@ -4,9 +4,14 @@
   const DEFAULT_EFFECT_LEVEL = 100;
   const NO_EFFECT_VALUE = `none`;
   const DEFAULT_SCALE_CONTROL_VALUE = `100%`;
+  const MIN_SCALE_PERCENTAGE = 25;
+  const MAX_SCALE_PERCENTAGE = 100;
+  const SCALE_PERCENTAGE_STEP = 25;
 
-  let currentEffect = ``;
-  let effectLevel = DEFAULT_EFFECT_LEVEL;
+  const GRAYSCALE_PROPORTION =  1 / 100;
+  const SEPIA_PROPORTION =  1 / 100;
+  const BRIGHTNESS_PROPORTION = 2 / 100;
+  const BLUR_PROPORTION = 3 / 100;
 
   const main = document.querySelector(`main`);
 
@@ -18,6 +23,7 @@
 
   const imagePreviewElement = uploadModal.querySelector(`.img-upload__preview img`);
 
+  const effectLevelFieldset = uploadModal.querySelector(`.effect-level`);
   const effectLevelValue = uploadModal.querySelector(`.effect-level__value`);
   const effectLevelDepth = uploadModal.querySelector(`.effect-level__depth`);
   const effectLevelLine = uploadModal.querySelector(`.effect-level__line`);
@@ -30,7 +36,8 @@
   const scaleControlSmaller = scaleControl.querySelector(`.scale__control--bigger`);
   const scaleControlValue = scaleControl.querySelector(`.scale__control--value`);
 
-  scaleControlValue.value = DEFAULT_SCALE_CONTROL_VALUE;
+  let currentEffect = ``;
+  let effectLevel = DEFAULT_EFFECT_LEVEL;
 
   const onUploadOpenerChange = () => {
     openUploadModal();
@@ -51,26 +58,29 @@
     uploadCanceler.addEventListener(`click`, onUploadCancelerClick);
     document.addEventListener(`keydown`, onDocumentEscapePress);
     window.gallery.photosContainer.removeEventListener(`click`, window.picture.onPhotosContainerClick);
-    effectLevelPin.addEventListener(`mousedown`, window.slider.pinMouseDownHandler);
+    effectLevelPin.addEventListener(`mousedown`, window.slider.onEffectLevelPinMouseDown);
     uploadOpener.removeEventListener(`change`, onUploadOpenerChange);
     window.form.textHashtags.addEventListener(`input`, window.form.onTextHashtagsInput);
     uploadModal.classList.remove(`hidden`);
-    effectsListElement.addEventListener(`change`, effectsListClickHandler);
-    scaleControl.addEventListener(`click`, scaleControlHandler);
+    effectsListElement.addEventListener(`change`, onEffectsListElementChange);
+    scaleControl.addEventListener(`click`, onScaleControlClick);
     uploadForm.addEventListener(`submit`, onUploadFormSubmit);
+    effectLevelFieldset.classList.add(`visually-hidden`);
+    setEffectLevel(DEFAULT_EFFECT_LEVEL);
+    scaleControlValue.value = DEFAULT_SCALE_CONTROL_VALUE;
   };
 
   const closeUploadModal = () => {
     uploadCanceler.removeEventListener(`click`, onUploadCancelerClick);
     document.removeEventListener(`keydown`, onDocumentEscapePress);
     window.gallery.photosContainer.addEventListener(`click`, window.picture.onPhotosContainerClick);
-    effectLevelPin.addEventListener(`mousedown`, window.slider.pinMouseDownHandler);
+    effectLevelPin.addEventListener(`mousedown`, window.slider.onEffectLevelPinMouseDown);
     uploadOpener.addEventListener(`change`, onUploadOpenerChange);
     window.form.textHashtags.removeEventListener(`input`, window.form.onTextHashtagsInput);
     uploadModal.classList.add(`hidden`);
     uploadOpener.value = ``;
-    effectsListElement.removeEventListener(`change`, effectsListClickHandler);
-    scaleControl.removeEventListener(`click`, scaleControlHandler);
+    effectsListElement.removeEventListener(`change`, onEffectsListElementChange);
+    scaleControl.removeEventListener(`click`, onScaleControlClick);
     uploadForm.removeEventListener(`submit`, onUploadFormSubmit);
 
     scaleControlValue.value = DEFAULT_SCALE_CONTROL_VALUE;
@@ -129,15 +139,15 @@
     main.append(errorWindow);
   };
 
-  const scaleControlHandler = (evt) => {
-    if (evt.target === scaleControlBigger && scaleControlValue.value.slice(0, -1) > 25) {
-      scaleControlValue.value = +scaleControlValue.value.slice(0, -1) - 25 + `%`;
+  const onScaleControlClick = (evt) => {
+    if (evt.target === scaleControlBigger && scaleControlValue.value.slice(0, -1) > MIN_SCALE_PERCENTAGE) {
+      scaleControlValue.value = +scaleControlValue.value.slice(0, -1) - SCALE_PERCENTAGE_STEP + `%`;
       imagePreviewElement.style.transform = `scale(0.${scaleControlValue.value.slice(0, -1)})`;
-    } else if (evt.target === scaleControlSmaller && scaleControlValue.value.slice(0, -1) < 100) {
-      scaleControlValue.value = +scaleControlValue.value.slice(0, -1) + 25 + `%`;
-      if (scaleControlValue.value.slice(0, -1) < 100) {
+    } else if (evt.target === scaleControlSmaller && scaleControlValue.value.slice(0, -1) < MAX_SCALE_PERCENTAGE) {
+      scaleControlValue.value = +scaleControlValue.value.slice(0, -1) + SCALE_PERCENTAGE_STEP + `%`;
+      if (scaleControlValue.value.slice(0, -1) < MAX_SCALE_PERCENTAGE) {
         imagePreviewElement.style.transform = `scale(0.${scaleControlValue.value.slice(0, -1)})`;
-      } else if (+scaleControlValue.value.slice(0, -1) === 100) {
+      } else if (+scaleControlValue.value.slice(0, -1) === MAX_SCALE_PERCENTAGE) {
         imagePreviewElement.style.transform = ``;
       }
     }
@@ -149,19 +159,19 @@
     effectLevelDepth.style.width = `${level}%`;
     switch (currentEffect) {
       case `effects__preview--chrome`:
-        imagePreviewElement.style.filter = `grayscale(${level / 100})`;
+        imagePreviewElement.style.filter = `grayscale(${level * GRAYSCALE_PROPORTION})`;
         break;
       case `effects__preview--sepia`:
-        imagePreviewElement.style.filter = `sepia(${level / 100})`;
+        imagePreviewElement.style.filter = `sepia(${level * SEPIA_PROPORTION})`;
         break;
       case `effects__preview--marvin`:
         imagePreviewElement.style.filter = `invert(${level}%)`;
         break;
       case `effects__preview--phobos`:
-        imagePreviewElement.style.filter = `blur(${level * 3 / 100}px)`;
+        imagePreviewElement.style.filter = `blur(${level * BLUR_PROPORTION}px)`;
         break;
       case `effects__preview--heat`:
-        imagePreviewElement.style.filter = `brightness(${level * 2 / 100 + 1})`;
+        imagePreviewElement.style.filter = `brightness(${level * BRIGHTNESS_PROPORTION + 1})`;
         break;
       default:
         imagePreviewElement.style.filter = NO_EFFECT_VALUE;
@@ -176,21 +186,24 @@
     }
   };
 
-  const effectsListClickHandler = (evt) => {
+  const onEffectsListElementChange = (evt) => {
     resetPreviewEffectClasses();
 
     if (evt.target.value !== NO_EFFECT_VALUE) {
+      if (effectLevelFieldset.classList.contains(`visually-hidden`)) {
+        effectLevelFieldset.classList.remove(`visually-hidden`);
+      }
       currentEffect = `effects__preview--${evt.target.value}`;
       imagePreviewElement.classList.add(currentEffect);
       effectLevel = DEFAULT_EFFECT_LEVEL;
       setEffectLevel(effectLevel);
       return;
+    } else {
+      effectLevelFieldset.classList.add(`visually-hidden`);
     }
 
     currentEffect = ``;
   };
-
-  setEffectLevel(DEFAULT_EFFECT_LEVEL);
 
   uploadOpener.addEventListener(`change`, onUploadOpenerChange);
 

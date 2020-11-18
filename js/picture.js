@@ -8,24 +8,30 @@
   const onCommentsLoaderClick = () => {
     const bigPicture = document.querySelector(`.big-picture`);
     const bigPictureId = bigPicture.dataset.id;
-    const bigPictureComments = window.gallery.galleryData[bigPictureId].comments;
+
+    let bigPictureComments;
+    for (let pictureComments of window.gallery.galleryData) {
+      if (pictureComments.url === bigPictureId) {
+        bigPictureComments = pictureComments.comments;
+      }
+    }
 
     const socialComments = document.querySelector(`.social__comments`);
     const socialCommentCount = document.querySelector(`.social__comment-count`);
     const shownCommentsCount = +socialCommentCount.innerHTML.split(` `)[0];
 
-    let nextCommentChunk = [];
+    let nextCommentsChunk = [];
     if (bigPictureComments.length - shownCommentsCount > COMMENTS_CHUNK) {
-      nextCommentChunk = bigPictureComments.slice(shownCommentsCount, shownCommentsCount + COMMENTS_CHUNK);
+      nextCommentsChunk = bigPictureComments.slice(shownCommentsCount, shownCommentsCount + COMMENTS_CHUNK);
     } else {
-      nextCommentChunk = bigPictureComments.slice(shownCommentsCount, bigPictureComments.length);
+      nextCommentsChunk = bigPictureComments.slice(shownCommentsCount, bigPictureComments.length);
       commentsLoader.classList.add(`hidden`);
       commentsLoader.removeEventListener(`click`, onCommentsLoaderClick);
     }
 
-    renderBigPictureComments(nextCommentChunk, socialComments);
+    renderBigPictureComments(nextCommentsChunk, socialComments);
 
-    socialCommentCount.innerHTML = `${shownCommentsCount + nextCommentChunk.length} из ${bigPictureComments.length} комментариев`;
+    socialCommentCount.innerHTML = `${shownCommentsCount + nextCommentsChunk.length} из ${bigPictureComments.length} комментариев`;
   };
 
   const renderBigPicture = (photo, id) => {
