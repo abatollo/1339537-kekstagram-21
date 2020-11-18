@@ -31,8 +31,6 @@
   let currentEffect = ``;
   let effectLevel = DEFAULT_EFFECT_LEVEL;
 
-  scaleControlValue.value = DEFAULT_SCALE_CONTROL_VALUE;
-
   const onUploadOpenerChange = () => {
     openUploadModal();
   };
@@ -60,6 +58,8 @@
     scaleControl.addEventListener(`click`, scaleControlHandler);
     uploadForm.addEventListener(`submit`, onUploadFormSubmit);
     effectLevelFieldset.classList.add(`visually-hidden`);
+    setEffectLevel(DEFAULT_EFFECT_LEVEL);
+    scaleControlValue.value = DEFAULT_SCALE_CONTROL_VALUE;
   };
 
   const closeUploadModal = () => {
@@ -196,8 +196,6 @@
 
     currentEffect = ``;
   };
-
-  setEffectLevel(DEFAULT_EFFECT_LEVEL);
 
   uploadOpener.addEventListener(`change`, onUploadOpenerChange);
 
