@@ -18,8 +18,8 @@
 
     photosElement.querySelector(`.picture__comments`).textContent = photo.comments.length;
     photosElement.querySelector(`.picture__likes`).textContent = photo.likes;
-    photosElement.querySelector(`.picture__img`).setAttribute(`src`, `${photo.url}`);
-    photosElement.querySelector(`.picture__img`).setAttribute(`alt`, `${photo.description}`);
+    photosElement.querySelector(`.picture__img`).src = photo.url;
+    photosElement.querySelector(`.picture__img`).alt = photo.description;
 
     return photosElement;
   };

@@ -50,7 +50,7 @@ const showRandom = () => {
 
 const onDefaultFilterClick = window.util.debounce(showDefault);
 const onCommentsFilterClick = window.util.debounce(showCommented);
-const onRandomFilterClick  = window.util.debounce(showRandom);
+const onRandomFilterClick = window.util.debounce(showRandom);
 
 defaultFilterButton.addEventListener(`click`, onDefaultFilterClick);
 commentsFilterButton.addEventListener(`click`, onCommentsFilterClick);
