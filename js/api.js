@@ -7,7 +7,7 @@ const STATUS_CODE = {
 };
 const TIMEOUT = 10000;
 
-const ajax = (method, url, data, onSuccess, onError) => {
+const transferData = (method, url, data, onSuccess, onError) => {
   const xhr = new XMLHttpRequest();
   xhr.responseType = `json`;
 
@@ -33,11 +33,11 @@ const ajax = (method, url, data, onSuccess, onError) => {
 };
 
 const download = (onSuccess, onError) => {
-  ajax(`GET`, URL_DOWNLOAD, null, onSuccess, onError);
+  transferData(`GET`, URL_DOWNLOAD, null, onSuccess, onError);
 };
 
 const upload = (data, onSuccess, onError) => {
-  ajax(`POST`, URL_UPLOAD, data, onSuccess, onError);
+  transferData(`POST`, URL_UPLOAD, data, onSuccess, onError);
 };
 
 window.api = {
