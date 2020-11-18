@@ -50,12 +50,12 @@
     uploadCanceler.addEventListener(`click`, onUploadCancelerClick);
     document.addEventListener(`keydown`, onDocumentEscapePress);
     window.gallery.photosContainer.removeEventListener(`click`, window.picture.onPhotosContainerClick);
-    effectLevelPin.addEventListener(`mousedown`, window.slider.pinMouseDownHandler);
+    effectLevelPin.addEventListener(`mousedown`, window.slider.onEffectLevelPinMouseDown);
     uploadOpener.removeEventListener(`change`, onUploadOpenerChange);
     window.form.textHashtags.addEventListener(`input`, window.form.onTextHashtagsInput);
     uploadModal.classList.remove(`hidden`);
-    effectsListElement.addEventListener(`change`, effectsListClickHandler);
-    scaleControl.addEventListener(`click`, scaleControlHandler);
+    effectsListElement.addEventListener(`change`, onEffectsListElementChange);
+    scaleControl.addEventListener(`click`, onScaleControlClick);
     uploadForm.addEventListener(`submit`, onUploadFormSubmit);
     effectLevelFieldset.classList.add(`visually-hidden`);
     setEffectLevel(DEFAULT_EFFECT_LEVEL);
@@ -66,13 +66,13 @@
     uploadCanceler.removeEventListener(`click`, onUploadCancelerClick);
     document.removeEventListener(`keydown`, onDocumentEscapePress);
     window.gallery.photosContainer.addEventListener(`click`, window.picture.onPhotosContainerClick);
-    effectLevelPin.addEventListener(`mousedown`, window.slider.pinMouseDownHandler);
+    effectLevelPin.addEventListener(`mousedown`, window.slider.onEffectLevelPinMouseDown);
     uploadOpener.addEventListener(`change`, onUploadOpenerChange);
     window.form.textHashtags.removeEventListener(`input`, window.form.onTextHashtagsInput);
     uploadModal.classList.add(`hidden`);
     uploadOpener.value = ``;
-    effectsListElement.removeEventListener(`change`, effectsListClickHandler);
-    scaleControl.removeEventListener(`click`, scaleControlHandler);
+    effectsListElement.removeEventListener(`change`, onEffectsListElementChange);
+    scaleControl.removeEventListener(`click`, onScaleControlClick);
     uploadForm.removeEventListener(`submit`, onUploadFormSubmit);
 
     scaleControlValue.value = DEFAULT_SCALE_CONTROL_VALUE;
@@ -131,7 +131,7 @@
     main.append(errorWindow);
   };
 
-  const scaleControlHandler = (evt) => {
+  const onScaleControlClick = (evt) => {
     if (evt.target === scaleControlBigger && scaleControlValue.value.slice(0, -1) > 25) {
       scaleControlValue.value = +scaleControlValue.value.slice(0, -1) - 25 + `%`;
       imagePreviewElement.style.transform = `scale(0.${scaleControlValue.value.slice(0, -1)})`;
@@ -178,7 +178,7 @@
     }
   };
 
-  const effectsListClickHandler = (evt) => {
+  const onEffectsListElementChange = (evt) => {
     resetPreviewEffectClasses();
 
     if (evt.target.value !== NO_EFFECT_VALUE) {

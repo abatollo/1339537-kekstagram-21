@@ -58,10 +58,10 @@ const getRandomPhotos = () => {
   photosContainer.appendChild(window.gallery.renderAllPhotos(randomFilterPhoto));
 };
 
-const defaultFilter = window.util.debounce(getDefaultPhotos);
-const countCommentsFilter = window.util.debounce(getCountCommentsPhotos);
-const randomFilter = window.util.debounce(getRandomPhotos);
+const onDefaultFilterClick = window.util.debounce(getDefaultPhotos);
+const onCommentsFilterClick = window.util.debounce(getCountCommentsPhotos);
+const onRandomFilterClick  = window.util.debounce(getRandomPhotos);
 
-defaultFilterButton.addEventListener(`click`, defaultFilter);
-commentsFilterButton.addEventListener(`click`, countCommentsFilter);
-randomFilterButton.addEventListener(`click`, randomFilter);
+defaultFilterButton.addEventListener(`click`, onDefaultFilterClick);
+commentsFilterButton.addEventListener(`click`, onCommentsFilterClick);
+randomFilterButton.addEventListener(`click`, onRandomFilterClick);

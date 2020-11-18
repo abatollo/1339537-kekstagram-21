@@ -17,12 +17,12 @@
     return effectLevel;
   };
 
-  const pinMouseDownHandler = (evt) => {
+  const onEffectLevelPinMouseDown = (evt) => {
     evt.preventDefault();
 
     let startX = evt.clientX;
 
-    const pinMouseMoveHandler = (moveEvt) => {
+    const onPinMouseMove = (moveEvt) => {
       moveEvt.preventDefault();
 
       let shiftX = startX - moveEvt.clientX;
@@ -32,18 +32,18 @@
       window.uploadModal.setEffectLevel(calculateEffectLevel(shiftX));
     };
 
-    const pinMouseUpHandler = (upEvt) => {
+    const onPinMouseUp = (upEvt) => {
       upEvt.preventDefault();
 
-      document.removeEventListener(`mousemove`, pinMouseMoveHandler);
-      document.removeEventListener(`mouseup`, pinMouseUpHandler);
+      document.removeEventListener(`mousemove`, onPinMouseMove);
+      document.removeEventListener(`mouseup`, onPinMouseUp);
     };
 
-    document.addEventListener(`mousemove`, pinMouseMoveHandler);
-    document.addEventListener(`mouseup`, pinMouseUpHandler);
+    document.addEventListener(`mousemove`, onPinMouseMove);
+    document.addEventListener(`mouseup`, onPinMouseUp);
   };
 
   window.slider = {
-    pinMouseDownHandler
+    onEffectLevelPinMouseDown
   };
 })();

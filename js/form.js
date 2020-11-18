@@ -2,10 +2,9 @@
 
 (() => {
   const HASTAG_MAX_LENGTH = 20;
+  const REGULAR_EXPRESSION = /^[\w]*$/;
 
   const textHashtags = window.uploadModal.uploadModal.querySelector(`.text__hashtags`);
-
-  const re = /^[\w]*$/;
 
   const validateTextHashtags = () => {
     const textHashtagsParsed = textHashtags.value.trim().split(` `);
@@ -17,7 +16,7 @@
         customValidityMessage += `Хеш-тег не может состоять из одного октоторпа. `;
       }
 
-      if (!textHashtagsParsed[i].startsWith(`#`) && re.test(textHashtagsParsed[i]) && textHashtagsParsed[i].length > 0) {
+      if (!textHashtagsParsed[i].startsWith(`#`) && REGULAR_EXPRESSION.test(textHashtagsParsed[i]) && textHashtagsParsed[i].length > 0) {
         customValidityMessage += `Хеш-тег “${textHashtagsParsed[i]}” должен предваряться октоторпом. `;
       }
 
@@ -25,11 +24,11 @@
         customValidityMessage += `Хеш-тег “${textHashtagsParsed[i]}” должен быть короче 20 символов. Удалите лишние ${textHashtagsParsed[i].length - HASTAG_MAX_LENGTH} симв. `;
       }
 
-      if (!textHashtagsParsed[i].startsWith(`#`) && !re.test(textHashtagsParsed[i])) {
+      if (!textHashtagsParsed[i].startsWith(`#`) && !REGULAR_EXPRESSION.test(textHashtagsParsed[i])) {
         customValidityMessage += `Нельзя использовать спецсимволы (#, @, $ и т. п.), за исключением октоторпа в начале хеш-тега, символы пунктуации (тире, дефис, запятая и т. п.), эмодзи и т. д. `;
       }
 
-      if (textHashtagsParsed[i].startsWith(`#`) && textHashtagsParsed[i].length > 1 && !re.test(textHashtagsParsed[i].substring(1))) {
+      if (textHashtagsParsed[i].startsWith(`#`) && textHashtagsParsed[i].length > 1 && !REGULAR_EXPRESSION.test(textHashtagsParsed[i].substring(1))) {
         customValidityMessage += `После октоторпа не должны стоять спецсимволы (#, @, $ и т. п.), символы пунктуации (тире, дефис, запятая и т. п.), эмодзи и т. д. `;
       }
 
