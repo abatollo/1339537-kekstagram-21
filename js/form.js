@@ -2,6 +2,7 @@
 
 (() => {
   const HASTAG_MAX_LENGTH = 20;
+  const HASTAG_MAX_NUMBER = 5;
   const REGULAR_EXPRESSION = /^[\w]*$/;
 
   const textHashtags = window.uploadModal.uploadModal.querySelector(`.text__hashtags`);
@@ -42,7 +43,7 @@
       }
     }
 
-    if (textHashtagsParsed.length > 5) {
+    if (textHashtagsParsed.length > HASTAG_MAX_NUMBER) {
       customValidityMessage += `Нельзя указывать больше пяти хеш-тегов. `;
     }
 

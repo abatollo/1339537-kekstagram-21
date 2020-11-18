@@ -4,6 +4,14 @@
   const DEFAULT_EFFECT_LEVEL = 100;
   const NO_EFFECT_VALUE = `none`;
   const DEFAULT_SCALE_CONTROL_VALUE = `100%`;
+  const MIN_SCALE_PERCENTAGE = 25;
+  const MAX_SCALE_PERCENTAGE = 100;
+  const SCALE_PERCENTAGE_STEP = 25;
+
+  const GRAYSCALE_PROPORTION =  1 / 100;
+  const SEPIA_PROPORTION =  1 / 100;
+  const BRIGHTNESS_PROPORTION = 2 / 100;
+  const BLUR_PROPORTION = 3 / 100;
 
   const main = document.querySelector(`main`);
 
@@ -132,14 +140,14 @@
   };
 
   const onScaleControlClick = (evt) => {
-    if (evt.target === scaleControlBigger && scaleControlValue.value.slice(0, -1) > 25) {
-      scaleControlValue.value = +scaleControlValue.value.slice(0, -1) - 25 + `%`;
+    if (evt.target === scaleControlBigger && scaleControlValue.value.slice(0, -1) > MIN_SCALE_PERCENTAGE) {
+      scaleControlValue.value = +scaleControlValue.value.slice(0, -1) - SCALE_PERCENTAGE_STEP + `%`;
       imagePreviewElement.style.transform = `scale(0.${scaleControlValue.value.slice(0, -1)})`;
-    } else if (evt.target === scaleControlSmaller && scaleControlValue.value.slice(0, -1) < 100) {
-      scaleControlValue.value = +scaleControlValue.value.slice(0, -1) + 25 + `%`;
-      if (scaleControlValue.value.slice(0, -1) < 100) {
+    } else if (evt.target === scaleControlSmaller && scaleControlValue.value.slice(0, -1) < MAX_SCALE_PERCENTAGE) {
+      scaleControlValue.value = +scaleControlValue.value.slice(0, -1) + SCALE_PERCENTAGE_STEP + `%`;
+      if (scaleControlValue.value.slice(0, -1) < MAX_SCALE_PERCENTAGE) {
         imagePreviewElement.style.transform = `scale(0.${scaleControlValue.value.slice(0, -1)})`;
-      } else if (+scaleControlValue.value.slice(0, -1) === 100) {
+      } else if (+scaleControlValue.value.slice(0, -1) === MAX_SCALE_PERCENTAGE) {
         imagePreviewElement.style.transform = ``;
       }
     }
@@ -151,19 +159,19 @@
     effectLevelDepth.style.width = `${level}%`;
     switch (currentEffect) {
       case `effects__preview--chrome`:
-        imagePreviewElement.style.filter = `grayscale(${level / 100})`;
+        imagePreviewElement.style.filter = `grayscale(${level * GRAYSCALE_PROPORTION})`;
         break;
       case `effects__preview--sepia`:
-        imagePreviewElement.style.filter = `sepia(${level / 100})`;
+        imagePreviewElement.style.filter = `sepia(${level * SEPIA_PROPORTION})`;
         break;
       case `effects__preview--marvin`:
         imagePreviewElement.style.filter = `invert(${level}%)`;
         break;
       case `effects__preview--phobos`:
-        imagePreviewElement.style.filter = `blur(${level * 3 / 100}px)`;
+        imagePreviewElement.style.filter = `blur(${level * BLUR_PROPORTION}px)`;
         break;
       case `effects__preview--heat`:
-        imagePreviewElement.style.filter = `brightness(${level * 2 / 100 + 1})`;
+        imagePreviewElement.style.filter = `brightness(${level * BRIGHTNESS_PROPORTION + 1})`;
         break;
       default:
         imagePreviewElement.style.filter = NO_EFFECT_VALUE;

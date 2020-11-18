@@ -16,29 +16,19 @@ const selectFilter = (buttonElement) => {
 const clearPhotos = () => {
   window.gallery.photosContainer.classList.add(`hidden`);
   const photos = document.querySelectorAll(`.picture`);
-  for (let i = 0; i < photos.length; i++) {
-    photos[i].remove();
+  for (let photo of photos) {
+    photo.remove();
   }
   window.gallery.photosContainer.classList.remove(`hidden`);
 };
 
-const shufflePhotos = (photos) => {
-  for (let i = photos.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    const element = photos[j];
-    photos[j] = photos[i];
-    photos[i] = element;
-  }
-  return photos;
-};
-
-const getDefaultPhotos = () => {
+const showDefault = () => {
   selectFilter(defaultFilterButton);
   clearPhotos();
   photosContainer.appendChild(window.gallery.renderAllPhotos(window.gallery.galleryData));
 };
 
-const getCountCommentsPhotos = () => {
+const showCommented = () => {
   selectFilter(commentsFilterButton);
   const photos = window.gallery.galleryData;
   const commentFilterPhoto = photos.slice();
@@ -48,19 +38,19 @@ const getCountCommentsPhotos = () => {
   })));
 };
 
-const getRandomPhotos = () => {
+const showRandom = () => {
   selectFilter(randomFilterButton);
   const photos = window.gallery.galleryData;
   let randomFilterPhoto = photos.slice();
-  shufflePhotos(randomFilterPhoto);
+  window.util.shuffle(randomFilterPhoto);
   randomFilterPhoto = randomFilterPhoto.slice(0, 10);
   clearPhotos();
   photosContainer.appendChild(window.gallery.renderAllPhotos(randomFilterPhoto));
 };
 
-const onDefaultFilterClick = window.util.debounce(getDefaultPhotos);
-const onCommentsFilterClick = window.util.debounce(getCountCommentsPhotos);
-const onRandomFilterClick  = window.util.debounce(getRandomPhotos);
+const onDefaultFilterClick = window.util.debounce(showDefault);
+const onCommentsFilterClick = window.util.debounce(showCommented);
+const onRandomFilterClick  = window.util.debounce(showRandom);
 
 defaultFilterButton.addEventListener(`click`, onDefaultFilterClick);
 commentsFilterButton.addEventListener(`click`, onCommentsFilterClick);
