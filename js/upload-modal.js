@@ -5,9 +5,6 @@
   const NO_EFFECT_VALUE = `none`;
   const DEFAULT_SCALE_CONTROL_VALUE = `100%`;
 
-  let currentEffect = ``;
-  let effectLevel = DEFAULT_EFFECT_LEVEL;
-
   const main = document.querySelector(`main`);
 
   const uploadOpener = document.querySelector(`#upload-file`);
@@ -18,6 +15,7 @@
 
   const imagePreviewElement = uploadModal.querySelector(`.img-upload__preview img`);
 
+  const effectLevelFieldset = uploadModal.querySelector(`.effect-level`);
   const effectLevelValue = uploadModal.querySelector(`.effect-level__value`);
   const effectLevelDepth = uploadModal.querySelector(`.effect-level__depth`);
   const effectLevelLine = uploadModal.querySelector(`.effect-level__line`);
@@ -29,6 +27,9 @@
   const scaleControlBigger = scaleControl.querySelector(`.scale__control--smaller`);
   const scaleControlSmaller = scaleControl.querySelector(`.scale__control--bigger`);
   const scaleControlValue = scaleControl.querySelector(`.scale__control--value`);
+
+  let currentEffect = ``;
+  let effectLevel = DEFAULT_EFFECT_LEVEL;
 
   scaleControlValue.value = DEFAULT_SCALE_CONTROL_VALUE;
 
@@ -58,6 +59,7 @@
     effectsListElement.addEventListener(`change`, effectsListClickHandler);
     scaleControl.addEventListener(`click`, scaleControlHandler);
     uploadForm.addEventListener(`submit`, onUploadFormSubmit);
+    effectLevelFieldset.classList.add(`visually-hidden`);
   };
 
   const closeUploadModal = () => {
@@ -180,11 +182,16 @@
     resetPreviewEffectClasses();
 
     if (evt.target.value !== NO_EFFECT_VALUE) {
+      if (effectLevelFieldset.classList.contains(`visually-hidden`)) {
+        effectLevelFieldset.classList.remove(`visually-hidden`);
+      }
       currentEffect = `effects__preview--${evt.target.value}`;
       imagePreviewElement.classList.add(currentEffect);
       effectLevel = DEFAULT_EFFECT_LEVEL;
       setEffectLevel(effectLevel);
       return;
+    } else {
+      effectLevelFieldset.classList.add(`visually-hidden`);
     }
 
     currentEffect = ``;
