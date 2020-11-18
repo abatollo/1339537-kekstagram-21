@@ -8,8 +8,8 @@
   const MAX_SCALE_PERCENTAGE = 100;
   const SCALE_PERCENTAGE_STEP = 25;
 
-  const GRAYSCALE_PROPORTION =  1 / 100;
-  const SEPIA_PROPORTION =  1 / 100;
+  const GRAYSCALE_PROPORTION = 1 / 100;
+  const SEPIA_PROPORTION = 1 / 100;
   const BRIGHTNESS_PROPORTION = 2 / 100;
   const BLUR_PROPORTION = 3 / 100;
 
@@ -48,10 +48,12 @@
   };
 
   const onDocumentEscapePress = (evt) => {
-    if (evt.key === `Escape` && evt.target !== window.form.textHashtags && evt.target !== window.form.textDescription) {
-      evt.preventDefault();
-      closeUploadModal();
-    }
+    window.util.isEscEvent(evt, () => {
+      if (evt.target !== window.form.textHashtags && evt.target !== window.form.textDescription) {
+        evt.preventDefault();
+        closeUploadModal();
+      }
+    });
   };
 
   const openUploadModal = () => {

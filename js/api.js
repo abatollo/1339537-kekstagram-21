@@ -1,14 +1,14 @@
 'use strict';
 
+const TIMEOUT = 10000;
 const Endpoint = {
   DOWNLOAD: `https://21.javascript.pages.academy/kekstagram/data`,
-  UPLOAD: `https://21.javascript.pages.academy/kekstagram/1`
+  UPLOAD: `https://21.javascript.pages.academy/kekstagram/`
 };
 const StatusCode = {
   OK: 200,
   NOT_FOUND: 404
 };
-const TIMEOUT = 10000;
 
 const transferData = (method, url, data, onSuccess, onError) => {
   const xhr = new XMLHttpRequest();
